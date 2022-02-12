@@ -1,0 +1,140 @@
+<table class="table table-sm">
+            <thead style="resize:  20%">
+                <tr">
+                  <th scope="col">#</th>
+                  <th scope="col">Image</th>
+                  <th scope="col">title</th>
+                  <th scope="col">Score</th>
+                  <th scope="col">Progress</th>
+                  {% if (current_user.is_authenticated and current_user.username == username) %}
+                  <th edit="edit">Edit</th>
+                  {%endif%}
+                </tr>
+
+              </thead>
+
+              <tbody>
+                {% for i in range(data.count()) %}
+
+                <tr class="table-{{colours[data[i].status]}}">
+                    
+                    <th scope="row" >{{i + 1}}</th>
+                    <td><img src={{url_for("static", filename='profile_pics/' + data[i].image_file)}} width = "50px" height="70px"></td>
+                    <td class="align-middle">{{data[i].title}}</td>
+                    {% if data[i].score == -1 %}
+                        <td class="align-middle">NA</td>
+                    {% else %}
+                        <td class="align-middle">{{data[i].score}}</td>
+                    {% endif %}
+                    <td class="align-middle">{{data[i].status}}</td>
+                    {% if (current_user.is_authenticated and current_user.username == username) %}
+                        {% set x = i | string() %}
+                        {% set x = "#"+ x %}
+
+                        <td class="align-middle" style="width: 5%"><button type="button" class="btn btn-sm btn-primary edit_del" data-toggle="modal" data-target={{x}}>Edit</button>
+                        <form method = "post">
+                        <button type="submit" class="btn btn-sm btn-danger edit_del" name = "delete" value = "delete">Delete</button>
+                        <!--In dummy form data to get back which id i am working on-->
+                        <input type = "text" name = "id" style = "display:none" value = {{data[i].id}}></input>
+                                                
+                        </form>
+                        </td>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id= {{i}} tabindex="-1" role="dialog" aria-labelledby="editLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editLabel">Update</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="POST" action="" enctype="multipart/form-data">
+                                            {{ form_update.hidden_tag() }}
+                                            <fieldset class="form-group">
+                                                <legend class="border-bottom mb-4">{{data[i].title}}</legend>
+
+
+                                                <!--In dummy form data to get back which id i am working on-->
+                                                <input type = "text" name = "id" style = "display:none" value = {{data[i].id}}></input>
+                                                
+
+
+                                                <div class="form-group">
+                                                    {{ form_update.title.label(class="form-control-label") }}
+                                                    
+                                                    {% if form_update.title.errors %}
+                                                    
+
+                                                        {{ form_update.title(class="form-control form-control-sm is-invalid") }}
+                                                        <div class="invalid-feedback">
+                                                            {% for error in form.title.errors %}
+                                                                <span>{{ error }}</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    {% else %}
+                                                        {{ form_update.title(class="form-control form-control-lg",placeholder = "New Name else remains same") }}
+                                                    {% endif %}
+                                                </div>
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <label class="input-group-text" for="inputGroupSelect01">Status</label>
+                                                    </div>
+                                                    <select class="custom-select" id="inputGroupSelect01" name = "Status">
+                                                    <option>Plan to Start</option>
+                                                    <option>Started</option>
+                                                    <option>Completed</option>
+                                                    <option>On Hold</option>
+                                                    <option>Dropped</option>
+                                                    </select>
+                                                </div>
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <label class="input-group-text" for="inputGroupSelect01">Score</label>
+                                                    </div>
+                                                    <select class="custom-select" id="inputGroupSelect01" name = "Score">
+                                                    <option value="10">(10) Masterpiece</option>
+                                                    <option value="9">(9) Amazing</option>
+                                                    <option value="8">(8) Very Good</option>
+                                                    <option value="7">(7) Good</option>
+                                                    <option value="6">(6) Fine</option>
+                                                    <option value="5">(5) Average</option>
+                                                    <option value="4">(4) Bad</option>
+                                                    <option value="3">(3) Very Bad</option>
+                                                    <option value="2">(2) Appalling</option>
+                                                    <option value="1">(1) Garbage</option>
+                                                    <option value = "-1">NA</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    {{ form_update.picture.label() }}
+                                                    {{ form_update.picture(class="form-control-file") }}
+                                                    {% if form_update.picture.errors %}
+                                                        {% for error in form_update.picture.errors %}
+                                                            <span class="text-danger">{{ error }}</span></br>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </fieldset>
+                                            <div class="form-group">
+                                                
+                                                {{ form_update.submit2(class="btn btn-outline-info") }}
+                                                
+                                                <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">Close</button>
+                                            </div>
+
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!--end of modal-->
+                    {%endif%}
+                    
+                </tr>
+               {% endfor %}
+              </tbody>
+            </table>
