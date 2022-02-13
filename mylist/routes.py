@@ -19,18 +19,7 @@ import secrets
 import os
 
 mediums = ['Animes','Mangas','Web Series','Movies','Games','Books']
-entries = [
-	{
-		'user': 'pradyuman',
-		'title': 'GOT',
-		'score': 10,
-	},
-	{
-		'user': 'abhi',
-		'title': 'bleach',
-		'score': 9,
-	}
-]
+
 @app.before_first_request
 def create_tables():
     db.create_all()
