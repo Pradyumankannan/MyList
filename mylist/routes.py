@@ -19,7 +19,7 @@ import secrets
 import os
 
 mediums = ['Animes','Mangas','Web Series','Movies','Games','Books']
-
+entries = []
 @app.before_first_request
 def create_tables():
     db.create_all()
