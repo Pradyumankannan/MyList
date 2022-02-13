@@ -55,7 +55,7 @@ class UpdateAccountForm(FlaskForm):
                 raise ValidationError('That email is taken. Please choose a different one.')
 
 class EntryAddForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired(), Length(min=2, max=20)])
+    title = StringField('Title', validators=[DataRequired(), Length(min=2, max=50)])
     picture = FileField('Image', validators=[FileAllowed(['jpg', 'png'])])
     submit1 = SubmitField('Add')
 
