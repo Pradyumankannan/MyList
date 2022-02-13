@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField,SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from mylist.models import User
+from mylist.models import User,Entry
 from flask_login import login_user, current_user, logout_user, login_required
 
 class RegistrationForm(FlaskForm):
@@ -59,6 +59,11 @@ class EntryAddForm(FlaskForm):
     picture = FileField('Image', validators=[FileAllowed(['jpg', 'png'])])
     submit1 = SubmitField('Add')
 
+    def validate_title(self,title):
+        duplitcate = Entry.query.filter_by(title = title.data).first()
+        if duplitcate:
+            raise ValidationError("The Entry already exits")
+
 class EntryUpdateForm(FlaskForm):
     title = StringField('Title', validators=[])
     picture = FileField('Image', validators=[FileAllowed(['jpg', 'png'])])
@@ -68,6 +73,6 @@ class EntryUpdateForm(FlaskForm):
 
     def validate_title(self, title):
         if title.data != "":
-            entry = Entry,query.filter_by(title = title.data).first()
+            entry = Entry.query.filter_by(user = current_user).filter_by(title = title.data).first()
             if entry:
                 raise ValidationError("This Entry is already there. Choose different one")
